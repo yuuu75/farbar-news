@@ -143,6 +143,7 @@ header {
 .tags {
     font-size: 2vw;
 }
+
 </style>
 </head>
 
@@ -154,7 +155,7 @@ header {
 <header>
 
     <div class="title">
-        <h1>城市觀察</h1>
+        <h1>城市觀察時間(12:00-13:00)</h1>
         <p>URBAN PERSPECTIVES</p>
     </div>
 
@@ -224,7 +225,27 @@ setInterval(updateClock, 1000);
 
 /* YouTube */
 
-const VIDEO_ID = "b3NmhxUDt-4";
+const params = new URLSearchParams(window.location.search);
+const youtubeURL = params.get("video");
+
+let VIDEO_ID = "b3NmhxUDt-4"; // 沒有指定影片時的預設影片
+
+if (youtubeURL) {
+    try {
+        const url = new URL(youtubeURL);
+
+        if (url.hostname.includes("youtube.com")) {
+            VIDEO_ID = url.searchParams.get("v") || VIDEO_ID;
+        }
+
+        if (url.hostname === "youtu.be") {
+            VIDEO_ID = url.pathname.substring(1) || VIDEO_ID;
+        }
+
+    } catch (e) {
+        console.log("YouTube 網址格式錯誤");
+    }
+}
 
 let player;
 
@@ -236,10 +257,7 @@ function onYouTubeIframeAPIReady() {
 
         playerVars: {
             autoplay: 1,
-
-            /* 靜音才能讓自動播放最穩定 */
-            mute: 1,
-
+            mute: 0,
             controls: 0,
             rel: 0,
             playsinline: 1,
@@ -251,7 +269,7 @@ function onYouTubeIframeAPIReady() {
 
             onReady: function(event) {
 
-                event.target.mute();
+                event.target.setVolume(50);
                 event.target.playVideo();
 
             }
@@ -259,6 +277,7 @@ function onYouTubeIframeAPIReady() {
         }
 
     });
+
 
 }
 
