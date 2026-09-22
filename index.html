@@ -178,6 +178,7 @@ setInterval(updateClock, 1000);
 
 /* ---------- YouTube ---------- */
 
+
 const VIDEO_ID = "b3NmhxUDt-4";
 
 let player;
@@ -193,44 +194,25 @@ function onYouTubeIframeAPIReady() {
             mute: 1,
             controls: 0,
             rel: 0,
-            playsinline: 1,
-            modestbranding: 1,
-            iv_load_policy: 3
+            playsinline: 1
         },
 
         events: {
 
             onReady: function(event) {
-
-                const p = event.target;
-
-                // 先靜音，確保瀏覽器允許自動播放
-                p.mute();
-                p.playVideo();
-
-            },
-
-            onStateChange: function(event) {
-
-                if (event.data === YT.PlayerState.PLAYING) {
-
-                    // 播放成功後嘗試恢復聲音
-                    setTimeout(function() {
-
-                        player.setVolume(50);
-                        player.unMute();
-
-                    }, 2000);
-
-                }
-
+                event.target.mute();
+                event.target.playVideo();
             }
 
         }
 
     });
-
 }
+
+const tag = document.createElement("script");
+tag.src = "https://www.youtube.com/iframe_api";
+document.head.appendChild(tag);
+</script>
 
 
 /* 載入 YouTube API */
